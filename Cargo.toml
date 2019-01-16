@@ -1,0 +1,41 @@
+[package]
+authors = ["Daniel Egger <daniel@eggers-club.de>"]
+categories = ["embedded", "no-std"]
+description = "Board support crate for the STM32F072 discovery kit"
+documentation = "https://docs.rs/stm32f072b-disco"
+edition = "2018"
+keywords = ["arm", "cortex-m", "template"]
+license = "0BSD"
+name = "stm32f072b-disco"
+repository = "https://github.com/stm32-rs/stm32f072b-disco"
+version = "0.1.0"
+
+[dependencies]
+bare-metal = "0.2.4"
+cortex-m = "0.5.8"
+cortex-m-rt = "0.6.7"
+
+[dependencies.embedded-hal]
+features = ["unproven"]
+version = "0.2.2"
+
+[dependencies.stm32f0xx-hal]
+features = ["stm32f072", "rt"]
+version = "0.12.0"
+
+[dev-dependencies]
+nb = "0.1.1"
+panic-halt = "0.2.0"
+
+[features]
+default = ["rt"]
+rt = []
+
+[profile]
+[profile.dev]
+debug = true
+
+[profile.release]
+debug = true
+lto = true
+opt-level = "s"
