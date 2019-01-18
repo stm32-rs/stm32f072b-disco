@@ -4,13 +4,13 @@
 #[allow(unused)]
 use panic_halt;
 
-use stm32f0xx_hal as hal;
+use stm32f072b_disco as board;
 
-use cortex_m_rt::entry;
-
-use crate::hal::{delay::Delay, prelude::*, stm32};
+use board::hal::{delay::Delay, prelude::*, stm32};
+use board::{blue, green, orange, red};
 
 use cortex_m::peripheral::Peripherals;
+use cortex_m_rt::entry;
 
 #[entry]
 fn main() -> ! {
@@ -23,10 +23,10 @@ fn main() -> ! {
             let gpioc = p.GPIOC.split(&mut rcc);
 
             // Initialize on-board LEDs
-            let mut orange = gpioc.pc8.into_push_pull_output(cs);
-            let mut green = gpioc.pc9.into_push_pull_output(cs);
-            let mut red = gpioc.pc6.into_push_pull_output(cs);
-            let mut blue = gpioc.pc7.into_push_pull_output(cs);
+            let mut orange = orange!(gpioc, cs);
+            let mut green = green!(gpioc, cs);
+            let mut red = red!(gpioc, cs);
+            let mut blue = blue!(gpioc, cs);
 
             // Get delay provider
             let mut delay = Delay::new(cp.SYST, &rcc);

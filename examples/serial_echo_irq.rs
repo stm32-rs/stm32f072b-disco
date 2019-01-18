@@ -4,25 +4,23 @@
 #[allow(unused)]
 use panic_halt;
 
-use stm32f0xx_hal as hal;
+use stm32f072b_disco as board;
 
-use crate::hal::{
+use board::hal::{
     gpio::*,
     prelude::*,
-    serial::Serial,
+    serial::{Event, Serial},
     stm32::{self, interrupt, Interrupt::USART2},
 };
 
 use cortex_m::interrupt::Mutex;
+use cortex_m_rt::entry;
 
 use core::{cell::RefCell, fmt::Write, ops::DerefMut};
 
-use cortex_m_rt::entry;
-
 // Make some peripherals globally available
 struct Shared {
-    serial:
-        hal::serial::Serial<stm32::USART2, gpioa::PA2<Alternate<AF1>>, gpioa::PA15<Alternate<AF1>>>,
+    serial: Serial<stm32::USART2, gpioa::PA2<Alternate<AF1>>, gpioa::PA15<Alternate<AF1>>>,
 }
 
 static SHARED: Mutex<RefCell<Option<Shared>>> = Mutex::new(RefCell::new(None));
@@ -43,7 +41,7 @@ fn main() -> ! {
             let mut serial = Serial::usart2(p.USART2, (tx, rx), 115_200.bps(), &mut rcc);
 
             // Enable interrupt generation for received data
-            serial.listen(hal::serial::Event::Rxne);
+            serial.listen(Event::Rxne);
 
             // Output a nice message
             serial

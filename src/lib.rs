@@ -9,3 +9,5 @@ pub use crate::hal::stm32::*;
 pub use crate::hal::*;
 pub use cortex_m::*;
 pub use cortex_m_rt::*;
+
+pub mod led;

@@ -4,12 +4,12 @@
 #[allow(unused)]
 use panic_halt;
 
-use stm32f0xx_hal as hal;
+use stm32f072b_disco as board;
 
-use nb::block;
+use board::hal::{prelude::*, serial::Serial, stm32};
 
-use crate::hal::{prelude::*, serial::Serial, stm32};
 use cortex_m_rt::entry;
+use nb::block;
 
 #[entry]
 fn main() -> ! {

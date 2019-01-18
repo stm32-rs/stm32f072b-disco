@@ -4,9 +4,9 @@
 #[allow(unused)]
 use panic_halt;
 
-use stm32f0xx_hal as hal;
+use stm32f072b_disco as board;
 
-use crate::hal::{prelude::*, stm32};
+use board::hal::{adc, prelude::*, serial, stm32};
 
 use cortex_m::{interrupt::Mutex, peripheral::syst::SystClkSource::Core, peripheral::Peripherals};
 use cortex_m_rt::{entry, exception};
@@ -14,10 +14,10 @@ use cortex_m_rt::{entry, exception};
 use core::{cell::RefCell, fmt::Write, ptr};
 
 struct Shared {
-    adc: hal::adc::Adc,
-    temp: hal::adc::VTemp,
-    reference: hal::adc::VRef,
-    tx: hal::serial::Tx<stm32::USART2>,
+    adc: adc::Adc,
+    temp: adc::VTemp,
+    reference: adc::VRef,
+    tx: serial::Tx<stm32::USART2>,
 }
 
 static SHARED: Mutex<RefCell<Option<Shared>>> = Mutex::new(RefCell::new(None));
@@ -70,16 +70,16 @@ fn main() -> ! {
 
             // Initialiase UART
             let (mut tx, _) =
-                hal::serial::Serial::usart2(p.USART2, (tx, rx), 115_200.bps(), &mut rcc).split();
+                serial::Serial::usart2(p.USART2, (tx, rx), 115_200.bps(), &mut rcc).split();
 
             // Initialise ADC
-            let mut adc = hal::adc::Adc::new(p.ADC, &mut rcc);
+            let mut adc = adc::Adc::new(p.ADC, &mut rcc);
 
             // Initialise core temperature sensor
-            let mut temp = hal::adc::VTemp::new();
+            let mut temp = adc::VTemp::new();
 
             // Initialise voltage reference sensor
-            let mut reference = hal::adc::VRef::new();
+            let mut reference = adc::VRef::new();
 
             // And enable readings
             temp.enable(&mut adc);

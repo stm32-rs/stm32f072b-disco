@@ -4,15 +4,16 @@
 #[allow(unused)]
 use panic_halt;
 
-use stm32f0xx_hal as hal;
+use stm32f072b_disco as board;
 
-use crate::hal::prelude::*;
+use board::hal::{delay, prelude::*, stm32, time, watchdog};
+
 use cortex_m_rt::entry;
 
 #[entry]
 fn main() -> ! {
     if let (Some(mut p), Some(cp)) = (
-        hal::stm32::Peripherals::take(),
+        stm32::Peripherals::take(),
         cortex_m::peripheral::Peripherals::take(),
     ) {
         cortex_m::interrupt::free(|cs| {
@@ -25,10 +26,10 @@ fn main() -> ! {
             p.DBGMCU.apb1_fz.modify(|_, w| w.dbg_iwdg_stop().set_bit());
 
             // Initialise watchdoch
-            let mut watchdog = hal::watchdog::Watchdog::new(p.IWDG);
+            let mut watchdog = watchdog::Watchdog::new(p.IWDG);
 
             // Get delay provider
-            let mut delay = hal::delay::Delay::new(cp.SYST, &rcc);
+            let mut delay = delay::Delay::new(cp.SYST, &rcc);
 
             // LED on for 2s to indicate start of example
             led.set_high();
@@ -36,7 +37,7 @@ fn main() -> ! {
             led.set_low();
 
             // Arm watchdog with 1s timeout
-            watchdog.start(hal::time::Hertz(1));
+            watchdog.start(time::Hertz(1));
 
             // Toggle LED a few times a tad slower within the timeout
             for _ in 0..=3 {
