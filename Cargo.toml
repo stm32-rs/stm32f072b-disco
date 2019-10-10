@@ -11,22 +11,24 @@ repository = "https://github.com/stm32-rs/stm32f072b-disco"
 version = "0.2.1"
 
 [dependencies]
-bare-metal = "0.2.4"
-cortex-m = "0.6.0"
-cortex-m-rt = "0.6.8"
+bare-metal = "0.2.5"
+cortex-m = "0.6.1"
+cortex-m-rt = "0.6.10"
 
 [dependencies.embedded-hal]
 features = ["unproven"]
-version = "0.2.2"
+version = "0.2.3"
 
 [dependencies.stm32f0xx-hal]
 features = ["stm32f072", "rt"]
-version = "0.14.0"
+version = "0.15.1"
 
 [dev-dependencies]
 nb = "0.1.2"
 panic-halt = "0.2.0"
 panic-ramdump = "0.1.1"
+ssd1306 = "0.2.6"
+
 
 [features]
 default = ["rt"]
